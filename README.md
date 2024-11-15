@@ -19,4 +19,4 @@
       - Movie lists \* N
 
 - NetflixGPT
-- search bar
+  - search bar
