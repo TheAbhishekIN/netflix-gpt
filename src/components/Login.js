@@ -8,16 +8,14 @@ import {
 } from "firebase/auth";
 import { auth } from "../utils/firebase";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { addUser } from "../utils/userSlice";
+import { USER_AVATAR } from "../utils/constants";
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(false);
 
   const [errorMessage, setErrorMessage] = useState(null);
   const dispatch = useDispatch();
-
-  const navigate = useNavigate();
 
   const name = useRef(null);
   const email = useRef(null);
@@ -42,7 +40,6 @@ const Login = () => {
 
     if (!isSignInForm) {
       // sign up
-
       createUserWithEmailAndPassword(
         auth,
         email.current.value,
@@ -51,11 +48,9 @@ const Login = () => {
         .then((userCredential) => {
           const user = userCredential.user;
 
-          console.log("signUP", user);
-
           updateProfile(user, {
             displayName: name.current.value,
-            photoURL: "https://avatars.githubusercontent.com/u/52767864?v=4",
+            photoURL: USER_AVATAR,
           })
             .then(() => {
               // Profile updated!
@@ -68,8 +63,6 @@ const Login = () => {
                   photoURL: photoURL,
                 })
               );
-
-              navigate("/browse");
             })
             .catch((error) => {
               const errorCode = error.code;
@@ -83,8 +76,6 @@ const Login = () => {
           const errorMessage = error.message;
 
           setErrorMessage(errorCode + "-" + errorMessage);
-
-          console.log(errorCode, errorMessage);
         });
     } else {
       // sign in
@@ -96,16 +87,11 @@ const Login = () => {
         .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
-          console.log("signIN", user);
-
-          navigate("/browse");
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
           setErrorMessage(errorCode + "-" + errorMessage);
-
-          console.log(errorCode, errorMessage);
         });
     }
   };
